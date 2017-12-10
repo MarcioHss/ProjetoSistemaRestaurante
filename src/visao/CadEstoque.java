@@ -9,8 +9,11 @@ import conexao.ConexaoBD;
 import DAO.DAOEstoque;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import model.ModelEstoque;
+import model.ModelTabela;
 
 /**
  *
@@ -28,6 +31,7 @@ public class CadEstoque extends javax.swing.JFrame {
     public CadEstoque() {
         initComponents();
         preencherProduto();
+        preencherTabela("SELECT * FROM cadestoque inner join cadprodutos on (produto_estoques = id_produtos) order by nome_produtos");
         setLocationRelativeTo(null);
     }
 
@@ -48,8 +52,6 @@ public class CadEstoque extends javax.swing.JFrame {
         jButtonCancelar = new javax.swing.JButton();
         jButtonEditar = new javax.swing.JButton();
         jButtonSalvar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTableCadProdutos = new javax.swing.JTable();
         jButtonPesquisar = new javax.swing.JButton();
         jTextFieldPesquisar = new javax.swing.JTextField();
         jButtonSair = new javax.swing.JButton();
@@ -61,6 +63,8 @@ public class CadEstoque extends javax.swing.JFrame {
         jFormattedTextFieldMinima = new javax.swing.JFormattedTextField();
         jFormattedTextFieldMaxima = new javax.swing.JFormattedTextField();
         jComboBoxProduto = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableCad = new javax.swing.JTable();
         jLabelCadItem = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -110,21 +114,6 @@ public class CadEstoque extends javax.swing.JFrame {
             }
         });
 
-        jTableCadProdutos.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastros de Produtos", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Arial Rounded MT Bold", 0, 11), new java.awt.Color(51, 255, 51))); // NOI18N
-        jTableCadProdutos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-
-            }
-        ));
-        jTableCadProdutos.setEnabled(false);
-        jScrollPane1.setViewportView(jTableCadProdutos);
-
         jButtonPesquisar.setText("Pesquisar");
         jButtonPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -158,6 +147,19 @@ public class CadEstoque extends javax.swing.JFrame {
         jComboBoxProduto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxProduto.setEnabled(false);
 
+        jTableCad.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(jTableCad);
+
         javax.swing.GroupLayout jPanelCadItemLayout = new javax.swing.GroupLayout(jPanelCadItem);
         jPanelCadItem.setLayout(jPanelCadItemLayout);
         jPanelCadItemLayout.setHorizontalGroup(
@@ -189,7 +191,7 @@ public class CadEstoque extends javax.swing.JFrame {
                                         .addComponent(jLabelFornecedor)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jComboBoxProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 46, Short.MAX_VALUE)))
                         .addGap(10, 10, 10)
                         .addGroup(jPanelCadItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelCadItemLayout.createSequentialGroup()
@@ -203,13 +205,16 @@ public class CadEstoque extends javax.swing.JFrame {
                             .addGroup(jPanelCadItemLayout.createSequentialGroup()
                                 .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonSair, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jButtonSair, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(59, Short.MAX_VALUE))
                     .addGroup(jPanelCadItemLayout.createSequentialGroup()
-                        .addComponent(jTextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonPesquisar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(59, Short.MAX_VALUE))
+                        .addGroup(jPanelCadItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelCadItemLayout.createSequentialGroup()
+                                .addComponent(jTextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonPesquisar))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanelCadItemLayout.setVerticalGroup(
             jPanelCadItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,8 +231,7 @@ public class CadEstoque extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCadItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonSair, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButtonSair, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelCadItemLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanelCadItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -245,13 +249,13 @@ public class CadEstoque extends javax.swing.JFrame {
                         .addGroup(jPanelCadItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelFornecedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jComboBoxProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(121, 121, 121)))
+                        .addGap(45, 45, 45)))
                 .addGroup(jPanelCadItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jLabelCadItem.setFont(new java.awt.Font("Copperplate Gothic Light", 1, 18)); // NOI18N
@@ -269,15 +273,15 @@ public class CadEstoque extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanelCadItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabelCadItem, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelCadItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(16, 16, 16))
+                .addComponent(jPanelCadItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -374,6 +378,34 @@ public class CadEstoque extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButtonNovoActionPerformed
 
+    public void preencherTabela(String sql){
+        ArrayList dados = new ArrayList();
+        String [] colunas = new String []{"Código", "Produto", "Qtd. Atual"};
+        conex.conexao();
+        conex.executaSql(sql);
+        try{
+            conex.rs.first();
+            do{
+                    dados.add(new Object[]{conex.rs.getInt("id_estoques"), conex.rs.getString("nome_produtos"),conex.rs.getDouble("qtdatual_estoques")});
+              }while(conex.rs.next());
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Erro ao preencher tabela"+ex);
+        }
+        
+        ModelTabela modelo = new ModelTabela(dados,colunas);
+        jTableCad.setModel(modelo);
+        jTableCad.getColumnModel().getColumn(0).setMinWidth(25);
+        jTableCad.getColumnModel().getColumn(0).setResizable(false);
+        jTableCad.getColumnModel().getColumn(1).setMinWidth(250);
+        jTableCad.getColumnModel().getColumn(1).setResizable(false);
+        jTableCad.getColumnModel().getColumn(1).setMinWidth(100);
+        jTableCad.getColumnModel().getColumn(1).setResizable(false);
+        jTableCad.getTableHeader().setReorderingAllowed(false);
+        jTableCad.setAutoResizeMode(jTableCad.AUTO_RESIZE_OFF);
+        jTableCad.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        conex.desconecta();
+      
+    }
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
         // TODO add your handling code here:
         mod.setPesquisa(jTextFieldPesquisar.getText());
@@ -485,8 +517,8 @@ public class CadEstoque extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelQTdade1;
     private javax.swing.JLabel jLabelQTdade2;
     private javax.swing.JPanel jPanelCadItem;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableCadProdutos;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTableCad;
     private javax.swing.JTextField jTextFieldCodigo;
     private javax.swing.JTextField jTextFieldPesquisar;
     // End of variables declaration//GEN-END:variables

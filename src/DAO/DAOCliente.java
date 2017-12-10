@@ -115,7 +115,7 @@ public class DAOCliente {
             mod.setSexo(conex.rs.getString("sexo_cliente") );
                         
         } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(null,"Erro ao inserir dados/NErro:"+ex);
+             JOptionPane.showMessageDialog(null,"Registro não encontrado");
              
         }               
                

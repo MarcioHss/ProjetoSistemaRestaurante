@@ -19,6 +19,7 @@ public class ModelUsuario {
     private String senha;
     private String situacao;
     private String Endereco;
+    private String nome_perfil;
     private int perfil;
 
     /**
@@ -131,6 +132,20 @@ public class ModelUsuario {
      */
     public void setPerfil(int perfil) {
         this.perfil = perfil;
+    }
+
+    /**
+     * @return the nome_perfil
+     */
+    public String getNome_perfil() {
+        return nome_perfil;
+    }
+
+    /**
+     * @param nome_perfil the nome_perfil to set
+     */
+    public void setNome_perfil(String nome_perfil) {
+        this.nome_perfil = nome_perfil;
     }
 
    

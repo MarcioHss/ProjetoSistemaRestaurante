@@ -21,6 +21,7 @@ public class ModelFornecedor {
     private String Endereco;
     private String UF;
     private String Pesquisa;
+  
 
     /**
      * @return the codigo
@@ -147,6 +148,8 @@ public class ModelFornecedor {
     public void setPesquisa(String Pesquisa) {
         this.Pesquisa = Pesquisa;
     }
+
+    
 
     
     

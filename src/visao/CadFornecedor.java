@@ -7,8 +7,12 @@ package visao;
 
 import conexao.ConexaoBD;
 import DAO.DAOForncedor;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import model.ModelFornecedor;
+import model.ModelTabela;
 
 /**
  *
@@ -23,6 +27,7 @@ public class CadFornecedor extends javax.swing.JFrame {
   
     public CadFornecedor() {
         initComponents();
+        preencherTabela("SELECT * FROM cadfornecedor order by nome_fornecedor");
         setLocationRelativeTo(null);
     }
 
@@ -54,13 +59,13 @@ public class CadFornecedor extends javax.swing.JFrame {
         jButtonCancelar = new javax.swing.JButton();
         jButtonEditar = new javax.swing.JButton();
         jButtonSalvar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTableCadFornecedor = new javax.swing.JTable();
         jButtonPesquisar = new javax.swing.JButton();
         jTextFieldPesquisar = new javax.swing.JTextField();
         jButtonSair = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jTextFieldCodigo = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableCad = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -138,21 +143,6 @@ public class CadFornecedor extends javax.swing.JFrame {
             }
         });
 
-        jTableCadFornecedor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro de Fornecedor", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial Rounded MT Bold", 0, 11), new java.awt.Color(255, 0, 0))); // NOI18N
-        jTableCadFornecedor.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-
-            }
-        ));
-        jTableCadFornecedor.setEnabled(false);
-        jScrollPane1.setViewportView(jTableCadFornecedor);
-
         jButtonPesquisar.setText("Pesquisar");
         jButtonPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,6 +163,19 @@ public class CadFornecedor extends javax.swing.JFrame {
         jTextFieldCodigo.setEditable(false);
         jTextFieldCodigo.setEnabled(false);
 
+        jTableCad.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(jTableCad);
+
         javax.swing.GroupLayout jPanelCadFornecedorLayout = new javax.swing.GroupLayout(jPanelCadFornecedor);
         jPanelCadFornecedor.setLayout(jPanelCadFornecedorLayout);
         jPanelCadFornecedorLayout.setHorizontalGroup(
@@ -183,7 +186,6 @@ public class CadFornecedor extends javax.swing.JFrame {
                         .addComponent(jTextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonPesquisar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelCadFornecedorLayout.createSequentialGroup()
                         .addGroup(jPanelCadFornecedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabelUF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -222,7 +224,8 @@ public class CadFornecedor extends javax.swing.JFrame {
                                     .addGroup(jPanelCadFornecedorLayout.createSequentialGroup()
                                         .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(50, Short.MAX_VALUE))
         );
         jPanelCadFornecedorLayout.setVerticalGroup(
@@ -269,9 +272,9 @@ public class CadFornecedor extends javax.swing.JFrame {
                 .addGroup(jPanelCadFornecedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -449,7 +452,34 @@ public class CadFornecedor extends javax.swing.JFrame {
         jButtonExcluir.setEnabled(false);// TODO add your handling code here:
     }//GEN-LAST:event_jButtonExcluirActionPerformed
 
-    
+    public void preencherTabela(String sql){
+        ArrayList dados = new ArrayList();
+        String [] colunas = new String []{"Código", "Produto", "CNPJ"};
+        conex.conexao();
+        conex.executaSql(sql);
+        try{
+            conex.rs.first();
+            do{
+                    dados.add(new Object[]{conex.rs.getInt("cod_forncedor"), conex.rs.getString("nome_fornecedor"),conex.rs.getString("cnpj_fornecedor")});
+              }while(conex.rs.next());
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Erro ao preencher tabela"+ex);
+        }
+        
+        ModelTabela modelo = new ModelTabela(dados,colunas);
+        jTableCad.setModel(modelo);
+        jTableCad.getColumnModel().getColumn(0).setMinWidth(25);
+        jTableCad.getColumnModel().getColumn(0).setResizable(false);
+        jTableCad.getColumnModel().getColumn(1).setMinWidth(250);
+        jTableCad.getColumnModel().getColumn(1).setResizable(false);
+        jTableCad.getColumnModel().getColumn(1).setMinWidth(100);
+        jTableCad.getColumnModel().getColumn(1).setResizable(false);
+        jTableCad.getTableHeader().setReorderingAllowed(false);
+        jTableCad.setAutoResizeMode(jTableCad.AUTO_RESIZE_OFF);
+        jTableCad.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        conex.desconecta();
+      
+    }
     /**
      * @param args the command line arguments
      */
@@ -503,8 +533,8 @@ public class CadFornecedor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelNome;
     private javax.swing.JLabel jLabelUF;
     private javax.swing.JPanel jPanelCadFornecedor;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableCadFornecedor;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTableCad;
     private javax.swing.JTextField jTextFieldCEP;
     private javax.swing.JTextField jTextFieldCNPJ;
     private javax.swing.JTextField jTextFieldCidade;

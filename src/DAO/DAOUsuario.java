@@ -48,6 +48,20 @@ public class DAOUsuario {
         
     }
     
+    public int buscaPerfil(String nome){
+        int codigo=0;
+        conex.conexao();
+        conex.executaSql("select * from cadperfil where nome_perfil ='"+nome+"'");
+        try {
+            conex.rs.first();
+            codigo = conex.rs.getInt("id_perfil");
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOEstoque.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        conex.desconecta();
+        return codigo;
+    }
+    
     public void Editar (ModelUsuario mod){
         conex.conexao();
         try {
@@ -76,7 +90,7 @@ public class DAOUsuario {
     public ModelUsuario Buscar (ModelUsuario mod){
         conex.conexao();
         try {
-            conex.executaSql("SELECT * FROM cadusuario WHERE nome_usuario like '%"+mod.getPesquisa()+"%'" );
+            conex.executaSql("SELECT * FROM cadusuario inner join cadperfil on (id_perfil = perfil_usuario) WHERE nome_usuario like '%"+mod.getPesquisa()+"%'" );
             conex.rs.first();
             mod.setNome(conex.rs.getString("nome_usuario") );
             mod.setLogin(conex.rs.getString("login_usuario") );
@@ -84,10 +98,11 @@ public class DAOUsuario {
             mod.setSenha(conex.rs.getString("senha_usuario") );
             mod.setCodigo(conex.rs.getInt("cod_usuario") );
             mod.setSituacao(conex.rs.getString("situacao_usuario") );
+            mod.setNome_perfil(conex.rs.getString("nome_perfil") );
             
                         
         } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(null,"Erro ao inserir dados/NErro:"+ex);
+             JOptionPane.showMessageDialog(null,"Registro não encontrado");
              
         }               
                

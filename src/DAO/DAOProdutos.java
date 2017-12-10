@@ -28,7 +28,7 @@ public class DAOProdutos {
                     + "fornecedor_produto,unidade_produto,preco_produtos) values(?,?,?,?)");
         
         pst.setString(1,mod.getNome());
-        pst.setString(2,mod.getFornecedor());
+        pst.setInt(2,mod.getFornecedor());
         pst.setString(3,mod.getUnidade());
         pst.setDouble(4,mod.getPreco());
         pst.execute();
@@ -44,6 +44,20 @@ public class DAOProdutos {
         conex.desconecta();
     }
     
+    public int buscaFornecedor(String nome){
+        int codigo=0;
+        conex.conexao();
+        conex.executaSql("select * from cadfornecedor where nome_fornecedor ='"+nome+"'");
+        try {
+            conex.rs.first();
+            codigo = conex.rs.getInt("cod_forncedor");
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOEstoque.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        conex.desconecta();
+        return codigo;
+    }
+    
     public void Editar(ModelProdutos mod){
         conex.conexao();
         try {
@@ -51,7 +65,7 @@ public class DAOProdutos {
                     + "fornecedor_produto =?,unidade_produto =?, preco_produtos =? where id_produtos =?");
         
         pst.setString(1,mod.getNome());
-        pst.setString(2,mod.getFornecedor());
+        pst.setInt(2,mod.getFornecedor());
         pst.setString(3,mod.getUnidade());
         pst.setInt(5,mod.getCodigo());
         pst.setDouble(4,mod.getPreco());
@@ -72,17 +86,18 @@ public class DAOProdutos {
     public ModelProdutos Buscar (ModelProdutos mod){
         conex.conexao();
         try {
-            conex.executaSql("SELECT * FROM cadprodutos WHERE nome_produtos like '%"+mod.getPesquisa()+"%'" );
+            conex.executaSql("SELECT * FROM cadprodutos inner join cadfornecedor on (cod_forncedor = fornecedor_produto) WHERE nome_produtos like '%"+mod.getPesquisa()+"%'" );
             conex.rs.first();
             mod.setNome(conex.rs.getString("nome_produtos") );
-            mod.setFornecedor(conex.rs.getString("fornecedor_produto") );
+            mod.setFornecedor(conex.rs.getInt("fornecedor_produto") );
             mod.setCodigo(conex.rs.getInt("id_produtos") );
             mod.setUnidade(conex.rs.getString("unidade_produto") );
             mod.setPreco(conex.rs.getDouble("preco_produtos") );
+            mod.setNome_fornecedor(conex.rs.getString("nome_fornecedor") );
           
                         
         } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(null,"Erro ao inserir dados/NErro:"+ex);
+             JOptionPane.showMessageDialog(null,"Registro não encontrado");
              
         }               
                

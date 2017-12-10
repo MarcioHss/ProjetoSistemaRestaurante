@@ -10,9 +10,10 @@ public class ModelProdutos {
    
     private int codigo;
     private String nome;
-    private String fornecedor;
+    private int fornecedor;
     private String unidade;
     private Double preco;
+     private String nome_fornecedor;
 
     /**
      * @return the Pesquisa
@@ -57,20 +58,6 @@ public class ModelProdutos {
     }
 
     /**
-     * @return the fornecedor
-     */
-    public String getFornecedor() {
-        return fornecedor;
-    }
-
-    /**
-     * @param fornecedor the fornecedor to set
-     */
-    public void setFornecedor(String fornecedor) {
-        this.fornecedor = fornecedor;
-    }
-
-    /**
      * @return the unidade
      */
     public String getUnidade() {
@@ -96,6 +83,34 @@ public class ModelProdutos {
      */
     public void setPreco(Double preco) {
         this.preco = preco;
+    }
+
+    /**
+     * @return the nome_fornecedor
+     */
+    public String getNome_fornecedor() {
+        return nome_fornecedor;
+    }
+
+    /**
+     * @param nome_fornecedor the nome_fornecedor to set
+     */
+    public void setNome_fornecedor(String nome_fornecedor) {
+        this.nome_fornecedor = nome_fornecedor;
+    }
+
+    /**
+     * @return the fornecedor
+     */
+    public int getFornecedor() {
+        return fornecedor;
+    }
+
+    /**
+     * @param fornecedor the fornecedor to set
+     */
+    public void setFornecedor(int fornecedor) {
+        this.fornecedor = fornecedor;
     }
    
 }

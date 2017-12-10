@@ -84,7 +84,7 @@ public class DAOEstoque {
           
                         
         } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(null,"Erro ao inserir dados/NErro:"+ex);
+            JOptionPane.showMessageDialog(null,"Registro não encontrado");
              
         }               
                

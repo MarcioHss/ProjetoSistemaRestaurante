@@ -67,7 +67,7 @@ public class DAOPerfil {
             mod.setCodigo(conex.rs.getInt("id_perfil") );
                  
         } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(null,"Erro ao inserir dados/NErro:"+ex);
+             JOptionPane.showMessageDialog(null,"Registro não encontrado");
              
         }               
                
